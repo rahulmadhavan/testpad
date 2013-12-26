@@ -1,6 +1,6 @@
 <?
 	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/simple_html_dom.php';
-	require_once $_SERVER['DOCUMENT_ROOT'].'/models/ImageGeneratorInterface.php';
+	require_once $_SERVER['DOCUMENT_ROOT'].'/models/generators/ImageGeneratorInterface.php';
 	require_once $_SERVER['DOCUMENT_ROOT'].'/models/Image.php';
 
 	class BehanceImageGenerator implements ImageGeneratorInterface{
@@ -36,15 +36,15 @@
 		
 	}
 
-	$options = array(
-      'http'=>array(
-        'method'=>"GET",
-        'header'=> 'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko)                        Chrome/31.0.1650.63 Safari/537.36' 
-      )
-    );
-
-	$big = new BehanceImageGenerator();
-	$images = $big->generateImages(array("options" => $options, "searchterm" => $_GET["search"]));
-	echo "".Image::getHtmlForImages($images);
+	// $options = array(
+	//       'http'=>array(
+	//         'method'=>"GET",
+	//         'header'=> 'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko)                        Chrome/31.0.1650.63 Safari/537.36' 
+	//       )
+	//     );
+	// 
+	// $big = new BehanceImageGenerator();
+	// $images = $big->generateImages(array("options" => $options, "searchterm" => $_GET["search"]));
+	// echo "".Image::getHtmlForImages($images);
 
 ?>
