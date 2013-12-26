@@ -3,24 +3,23 @@
 	require_once $_SERVER['DOCUMENT_ROOT'].'/models/ImageGeneratorInterface.php';
 	require_once $_SERVER['DOCUMENT_ROOT'].'/models/Image.php';
 
-	class MatboardImageGenerator implements ImageGeneratorInterface{
+	class BehanceImageGenerator implements ImageGeneratorInterface{
  
-		const SOURCE_NAME = 'thematboard';
-		const SOURCE_ROOT = 'http://thematboard.com';
+		const SOURCE_NAME = 'Behance';
+		const SOURCE_ROOT = 'http://www.behance.net/';
 		
 		public function generateImages($arguments = null){
 			
 		    $context = stream_context_create($arguments["options"]);
-
-		    $html = file_get_html('http://thematboard.com/actions/get_mats_AJAX.php?cat=&type=search&limit=10&start=1&searchterm=new+year',false,$context);
+		    $html = file_get_html('http://www.behance.net/search?search='.$arguments["searchterm"],false,$context);
 			$images= array();
 
-		    foreach($html->find('div[class=mat]') as $mat)
+		    foreach($html->find('div[class=covers]') as $bq)
 		    {
-		         foreach($mat->find('img') as $image){
+		         foreach($bq->find('img') as $image){
 			
-					$anchor_url = self::SOURCE_ROOT.$image->parent->href;
-		            $image_url = self::SOURCE_ROOT.$image->src;
+					$anchor_url = $image->parent->parent->href;
+		            $image_url = $image->src;
 					$alt = $image->alt;
 					$image = new Image(self::SOURCE_NAME,self::SOURCE_ROOT,$image_url,$alt,$anchor_url);
 
@@ -44,8 +43,8 @@
       )
     );
 
-	$big = new MatboardImageGenerator();
-	$images = $big->generateImages(array("options" => $options));
+	$big = new BehanceImageGenerator();
+	$images = $big->generateImages(array("options" => $options, "searchterm" => $_GET["search"]));
 	echo "".Image::getHtmlForImages($images);
 
 ?>

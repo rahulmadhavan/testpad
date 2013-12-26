@@ -3,22 +3,23 @@
 	require_once $_SERVER['DOCUMENT_ROOT'].'/models/ImageGeneratorInterface.php';
 	require_once $_SERVER['DOCUMENT_ROOT'].'/models/Image.php';
 
-	class BehanceImageGenerator implements ImageGeneratorInterface{
+	class FubizImageGenerator implements ImageGeneratorInterface{
  
-		const SOURCE_NAME = 'Behance';
-		const SOURCE_ROOT = 'http://www.behance.net/';
+		const SOURCE_NAME = 'fubiz';
+		const SOURCE_ROOT = 'http://www.fubiz.net/';
 		
 		public function generateImages($arguments = null){
 			
 		    $context = stream_context_create($arguments["options"]);
-		    $html = file_get_html('http://www.behance.net/search?search=text',false,$context);
+
+		    $html = file_get_html('http://www.fubiz.net/?s='.$arguments["searchterm"].'&type=posts',false,$context);
 			$images= array();
 
-		    foreach($html->find('div[class=covers]') as $bq)
+		    foreach($html->find('article') as $article)
 		    {
-		         foreach($bq->find('img') as $image){
+		         foreach($article->find('img') as $image){
 			
-					$anchor_url = $image->parent->parent->href;
+					$anchor_url = $image->parent->href;
 		            $image_url = $image->src;
 					$alt = $image->alt;
 					$image = new Image(self::SOURCE_NAME,self::SOURCE_ROOT,$image_url,$alt,$anchor_url);
@@ -43,8 +44,8 @@
       )
     );
 
-	$big = new BehanceImageGenerator();
-	$images = $big->generateImages(array("options" => $options));
+	$big = new FubizImageGenerator();
+	$images = $big->generateImages(array("options" => $options, "searchterm" => $_GET["search"]));
 	echo "".Image::getHtmlForImages($images);
 
 ?>

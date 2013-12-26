@@ -3,21 +3,21 @@
 	require_once $_SERVER['DOCUMENT_ROOT'].'/models/ImageGeneratorInterface.php';
 	require_once $_SERVER['DOCUMENT_ROOT'].'/models/Image.php';
 
-	class FubizImageGenerator implements ImageGeneratorInterface{
+	class FFFFoundImageGenerator implements ImageGeneratorInterface{
  
-		const SOURCE_NAME = 'fubiz';
-		const SOURCE_ROOT = 'http://www.fubiz.net/';
+		const SOURCE_NAME = 'ffffound';
+		const SOURCE_ROOT = 'http://ffffound.com/';
 		
 		public function generateImages($arguments = null){
 			
 		    $context = stream_context_create($arguments["options"]);
 
-		    $html = file_get_html('http://www.fubiz.net/?s=new-year&type=posts',false,$context);
+		    $html = file_get_html('http://ffffound.com/?offset=200',false,$context);
 			$images= array();
 
-		    foreach($html->find('article') as $article)
+		    foreach($html->find('blockquote') as $bq)
 		    {
-		         foreach($article->find('img') as $image){
+		         foreach($bq->find('img') as $image){
 			
 					$anchor_url = $image->parent->href;
 		            $image_url = $image->src;
@@ -44,8 +44,8 @@
       )
     );
 
-	$big = new FubizImageGenerator();
-	$images = $big->generateImages(array("options" => $options));
+	$big = new FFFFoundImageGenerator();
+	$images = $big->generateImages(array("options" => $options, "searchterm" => $_GET["search"]));
 	echo "".Image::getHtmlForImages($images);
 
 ?>
